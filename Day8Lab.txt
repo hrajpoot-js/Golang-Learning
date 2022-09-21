@@ -1,0 +1,73 @@
+Lab3 - library - https://go.dev/doc/tutorial/create-module
+Lab2 - 
+      Hello.go 
+             package main
+
+            import (
+                  "github.com/aws/aws-lambda-go/lambda"
+                  "fmt"
+            )
+
+            func main() {
+                  lambda.Start(hello)
+            }
+
+
+            type MyEvent struct {
+                  Name string `json:"uname"`
+                  Age  int    `json:"uage"`
+            }
+
+            type MyResponse struct {
+                  Message string `json:"Answer:"`
+            }
+
+            func hello(event MyEvent) (MyResponse, error) {
+                  return MyResponse{Message: fmt.Sprintf("%s is %d years old!", event.Name, event.Age)}, nil
+            }
+      
+      go mod init hello
+      go mod tidy
+      set GOOS=linux
+      set GOARCH=amd64
+      set CGO_ENABLED=0
+      go build -o hello
+
+      Option1
+      go.exe get -u github.com/aws/aws-lambda-go/cmd/build-lambda-zip
+      %USERPROFILE%\Go\bin\build-lambda-zip.exe -o hello.zip hello
+      Option2
+      zip hello.zip hello
+
+      
+Lab1 - 
+      package main
+
+      import (
+          "github.com/aws/aws-sdk-go/aws"
+        "github.com/aws/aws-sdk-go/aws/session"
+          "github.com/aws/aws-sdk-go/service/ec2"
+
+          "fmt"
+      )
+
+      func main() {
+        sess, err := session.NewSession(&aws.Config{
+          Region: aws.String("us-east-1"),
+        })
+
+
+          // Create new EC2 client
+          ec2Svc := ec2.New(sess)
+
+          // Call to get detailed information on each instance
+          result, err := ec2Svc.DescribeInstances(nil)
+          if err != nil {
+              fmt.Println("Error", err)
+          } else {
+              fmt.Println("Success", result.Reservations[0].Instances)
+          }
+      }
+      
+   Modify code to show list of instance names and ids 
+   

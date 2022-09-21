@@ -1,0 +1,81 @@
+Lab3 -  REST API (get method)
+package main
+
+import (
+	"fmt"
+	"io"
+	"encoding/json"
+	"net/http"
+	"strconv"
+)
+
+type Emp struct {
+	Empno  int     `json:"empno"`
+	Ename  string  `json:"ename"`
+	Salary int `json:"salary"`
+}
+type EmpManager struct {
+	emparr []Emp 
+}
+func (empmgr *EmpManager) add(e1 Emp){
+	empmgr.emparr = append(empmgr.emparr, e1)
+}
+
+func main() {
+	empmgr := new(EmpManager)
+	emp := Emp{1,"One",111}
+	empmgr.add(emp)
+	empmgr.add(Emp{2,"Two",222})
+	fmt.Println("EmpMgr " , empmgr )
+	handler := func(w http.ResponseWriter, req *http.Request) {
+		fmt.Println("Call has come for ", req.Method)
+		if (req.Method =="GET") {
+			 bytearr, _ := json.Marshal(empmgr.emparr)
+			io.WriteString(w,  string(bytearr))
+		}
+		if (req.Method =="POST") {
+			fmt.Println("post request" , req.FormValue("empno"))
+			emp1 := Emp{}
+			emp1.Empno,_ = strconv.Atoi( req.FormValue("empno"))
+			emp1.Ename = req.FormValue("ename")
+			emp1.Salary,_ =strconv.Atoi( req.FormValue("salary"))
+			empmgr.add(emp1)
+		   io.WriteString(w,  string("hello from post"))
+	   }
+	}
+
+	http.HandleFunc("/emp", handler)
+	
+	fmt.Printf("sever starting on 8080")
+	http.ListenAndServe(":8080", nil)
+}
+
+Lab 2-    for / -> load index.html and send its content
+
+Lab1 - Http Server
+      package main
+
+      import (
+        "fmt"
+        "io"
+        "net/http"
+      )
+
+      func main() {
+        indexhandler := func(w http.ResponseWriter, req *http.Request) {
+          io.WriteString(w, "<h1>Index Page</h1><h2><a href='p1'>Page1</a></h2><h2><a href='p2'>Page2</a></h2>")
+        }
+        page1handler := func(w http.ResponseWriter, req *http.Request) {
+          io.WriteString(w, "<h1>Page1 Page</h1>")
+        }
+        page2handler := func(w http.ResponseWriter, req *http.Request) {
+          io.WriteString(w, "<h1>Page2 Page</h1>")
+        }
+        http.HandleFunc("/", indexhandler)
+        http.HandleFunc("/p1", page1handler)
+        http.HandleFunc("/p2", page2handler)
+
+        fmt.Printf("sever starting on 8080")
+        http.ListenAndServe(":8080", nil)
+      }
+--

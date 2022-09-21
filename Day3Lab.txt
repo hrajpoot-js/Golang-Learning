@@ -1,0 +1,188 @@
+Lab7 extends - User logger to write output for error messages in demo.txt file
+            main() {
+                        f, err := os.OpenFile("testlogfile.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+                        if err != nil { 
+                           log.Fatalf("error opening file: %v", err)
+                                    }
+                        defer f.Close()
+                        log.SetOutput(f)
+                        log.Println("This is a test log entry")}
+            }
+Lab 7  http + json conversion
+            package main
+
+            import(
+                        "fmt"
+                        "net/http"
+                        "io"
+                        "encoding/json"
+            )
+
+            type UserStruct struct {
+                        Data struct {
+                                    Id        int    `json:"id"`
+                                    Email     string `json:"email"`
+                                    FirstName string `json:"first_name"`
+                                    LastName  string `json:"last_name"`
+                                    Avatar    string `json:"avatar"`
+                        } `json:"data"`
+                        Support struct {
+                                    URL  string `json:"url"`
+                                    Text string `json:"text"`
+                        } `json:"support"`
+            }
+
+            func main(){
+                        ch := "1"
+                        fmt.Println("Enter a number 1..12")
+                        fmt.Scanln(&ch)
+                        url := "https://reqres.in/api/users/"+ch
+                        fmt.Println("Fetching " + url)
+                        resp, err := http.Get(url)
+                        if err != nil {
+                                    fmt.Println("Error = " , err)
+                                    return
+                        }
+                        defer resp.Body.Close() 
+                        if resp.StatusCode == 404 {
+                                    fmt.Println("Wrong user id, ...1..12")
+                                    return 
+                        }
+                        fmt.Println("Server Returned  = " , resp)
+                        body, _ := io.ReadAll(resp.Body)
+                        fmt.Println("Body content   = " , string(body))
+                        res := UserStruct{}
+                        json.Unmarshal(body ,  &res)
+                        fmt.Println("User Email Name " + res.Data.Email)
+                        fmt.Println("User First Name " + res.Data.FirstName)
+
+            }
+Lab6 -  change the url to https://reqres.in/api/users?page=2 and observe
+            package main
+            import(
+                        "fmt"
+                        "net/http"
+                        "io"
+            )
+
+            func main(){
+                        ch := "1"
+                        fmt.Println("Enter a number 1..12")
+                        fmt.Scanln(&ch)
+                        url := "https://reqres.in/api/users/"+ch
+                        fmt.Println("Fetching " + url)
+                        resp, err := http.Get(url)
+                        if err != nil {
+                                    fmt.Println("Error = " , err)
+                                    return
+                        }
+                        defer resp.Body.Close() 
+                        if resp.StatusCode == 404 {
+                                    fmt.Println("Wrong user id, ...1..12")
+                                    return 
+                        }
+                        fmt.Println("Server Returned  = " , resp)
+                        body, _ := io.ReadAll(resp.Body)
+                        fmt.Println("Body content   = " , string(body))
+
+            }
+
+Lab 5 - Write a interface for converting string to uppercase toUpper
+            and override it for Emp object (ename conversion) -> emp.toUpper
+Lab 4 - 
+            package main
+
+
+            import(
+                        "fmt"
+                        "strconv"
+            )
+
+            type display interface {
+                        Print() 
+            }
+
+            type Emp struct {
+                        empno int 
+                        ename string
+                        salary int
+            }
+            type Product struct {
+                        prod int 
+                        prodname string
+            }
+
+            func (e Product) Print()  {
+                        str :="Product Details[Prodno = "+ strconv.Itoa(e.prod)+ " , ProdName = " + e.prodname +"]" ;
+                        fmt.Println(str)
+            }
+
+            func (e Emp) Print()  {
+                        str :="Emp Details[Empno = "+ strconv.Itoa(e.empno)+ " , Name = " + e.ename +"]" ;
+                        fmt.Println(str)
+            }
+
+            func main(){
+                        ch := "e"
+                        fmt.Println(ch)
+                        fmt.Println("Enter E for Emp and p for Product")
+                        fmt.Scanln(&ch)
+                        fmt.Println("Current Ch = ", ch)
+                        var obj display
+                        if ch =="E" {
+                                    obj = Emp{1,"aa",111}
+                        }
+                        if ch =="P" {
+                                    obj = Product{11,"Pen"}
+                        }
+                        obj.Print()
+             }
+
+Lab 3 - Create a demo2 folder
+            create Lab1.go 
+                  package main
+                  import (
+                        "fmt"
+                        "github.com/magiconair/properties"
+                  )
+
+                  func main() {
+
+                        p := properties.MustLoadFile("myprop.properties", properties.UTF8)
+                        fmt.Println(p)
+                        fmt.Println(p.MustGetString("hostname"))
+                        }
+            create myprop.properties 
+                  serverport=8080
+                  hostname=abc.com
+            cmd>go mod init demo
+            cmd>go mod tidy
+            cmd>go get 
+            cmd>go run Lab1.go
+                  --> check gopath(set go ..), confirm pkg directory in gopath
+            
+Lab 2 - create a map of int and Emp
+      add two static entries and print
+Lab 1 - 
+    package main
+
+    import(
+      "fmt"
+    )
+    func main(){
+      var mymap map[string]int 
+      mymap = make(map[string]int)
+      fmt.Println("mymap details " , len(mymap) )
+      mymap["a"]=100
+      fmt.Println("mymap details " , len(mymap) )
+      mymap["b"]=200
+      fmt.Println("mymap details " , len(mymap) )
+      mymap["c"]=300
+      fmt.Println("mymap details " , len(mymap) )
+      mymap["a"]=10
+      fmt.Println("mymap details " , len(mymap) )
+      mymap["b"]=20
+      fmt.Println("mymap details " , len(mymap) )
+
+      fmt.Println(mymap)
+    }

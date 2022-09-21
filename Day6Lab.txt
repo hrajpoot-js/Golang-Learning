@@ -1,0 +1,164 @@
+Lab 3 - docker intro
+	docker images 
+		list of images
+	docker run imagename
+		create a container 
+	docker ps
+		list of containers
+	docker run -P vaishalitapaswi/goimage
+		check port and then call http://hostname:port to confirm
+		
+	https://labs.play-with-docker.com/
+		start -> new instnace 
+			
+Lab2 - coverage
+	go test Lab1_test.go Lab1.go -v -coverprofile tmp.txt
+		will create tmp.txt with coverage details
+	go tool cover -html=tmp.txt -o tmp.html
+		convert to html (open tmp.html in browser)	
+Modified Lab2.go divide method
+	func Divide(s1 string, s2 string) (int, error) {
+	defer func() {
+		r := recover()
+		fmt.Println("---------------recover ", r)
+		if r != nil {
+			fmt.Println("Recovered in f", r)
+			//return 0, err
+		}
+	}()
+	fmt.Println("divide invoked with ", s1, ", ", s2)
+	num1, err := strconv.Atoi(s1)
+
+	if(err != nil) {
+		panic("Conversion Error")
+	}
+	num2, err := strconv.Atoi(s2)
+	if(err != nil) {
+		panic("Conversion Error")
+	}
+	ans:= num1 / num2
+	return ans, nil
+	}
+
+
+
+/*
+package main
+
+import (
+	"fmt"
+	"strconv"
+)
+
+func Hello(str string) string {
+	fmt.Println("hello invoked with ", str)
+	return "hello, " + str
+}
+func Add(no1 int, no2 int) int {
+	fmt.Println("add invoked with ", no1, ",", no2)
+	return no1 + no2
+}
+func Divide(s1 string, s2 string) int {
+	// two types of errors
+	//	1. invalid string where strconv gives errors
+	//	2. second argument is zero
+	fmt.Println("divide invoked with ", s1, ", ", s2)
+	num1, _ := strconv.Atoi(s1)
+	num2, _ := strconv.Atoi(s2)
+	return num1 / num2
+	/*
+	   if err != nil {
+	       fmt.Println("invalid string")
+	       return -1
+	   }
+
+	   if num2 == 0 {
+	       fmt.Println("second argument is zero")
+	       return -1
+	   }
+	*/
+
+}
+func main() {
+	fmt.Println("hello with fands returned ", Hello("fands"))
+	fmt.Println("add with 10,40 returned ", Add(10, 40))
+	fmt.Println("divide with 40,10 returned ", Divide("40", "10"))
+	fmt.Println("divide with 40,a returned ", Divide("40", "a"))
+	fmt.Println("divide with 40,0 returned ", Divide("40", "0"))
+}
+
+*/
+Lab2 - Write Lab1_test.go
+    package main
+
+    import (
+        "testing"
+        "fmt"
+    )
+
+    //func hello(str string) string {
+    func TestHello(t *testing.T) {
+        got := Hello("fands")
+        if got != "hello, fands" {
+            t.Error("hello invocation got ", got, " want 'Hello, fands'")
+        }
+    }
+
+    //func Add(no1 int, no2 int)int  {
+    func TestAdd(t *testing.T) {
+        got := Add(10, 400)
+        if got != 410 {
+            t.Error("add invocation with 10, 400 got ", got, " but wanted 410")
+        }
+    }
+
+    //func Divide(s1 string, s2 string) int {
+    func TestDivide1(t *testing.T) {
+        got := Divide("100", "4")
+        if got != 25 {
+            t.Error("divide invocation with 100, 4 got ", got, " but wanted 25")
+        }
+    }
+
+    func TestDivide2(t *testing.T) {
+        defer func() {
+            fmt.Println("before recover")
+            r := recover()
+            fmt.Println("after recover")
+            if r != nil {
+              //  fmt.Println("got ", got)
+                fmt.Println("Recovered for Divide Invocation with 100 and a", r)
+            }else{
+                t.Error("Exception not raised ")
+            }
+        }()
+        got := Divide("100", "a")
+            fmt.Println("Not Problem, got" , got)
+    }
+
+    go run Lab1.go
+    go test Lab1_test.go Lab1.go 
+        or
+    go mod init demo
+    go mod tidy
+    go test .
+  
+
+Lab1  - complete divide method
+    package main
+
+    import (_
+      "fmt"
+    )
+    func hello(str string) string {
+      fmt.Println("hello invoked with " , str)
+    }
+    func add(no1 int, no2 int)int  {
+      fmt.Println("add invoked with " , no1, no2)
+      return no1+no2
+    }
+    func divide(s1 string, s2 string) int {
+      // two types of errors
+      //	1. invalid string where strconv gives errors
+      //	2. second argument is zero 
+    }

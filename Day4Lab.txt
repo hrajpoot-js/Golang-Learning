@@ -1,0 +1,233 @@
+package main
+
+import(
+	"fmt"
+	"net/http"
+	"io"
+	"encoding/json"
+	"os"
+	"log"
+)
+
+type UserStruct struct {
+	Data struct {
+		Id        int    `json:"id"`
+		Email     string `json:"email"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Avatar    string `json:"avatar"`
+	} `json:"data"`
+	Support struct {
+		URL  string `json:"url"`
+		Text string `json:"text"`
+	} `json:"support"`
+}
+
+func main(){
+	f, err := os.OpenFile("demo.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	log.SetOutput(f)
+	defer f.Close()
+	ch := "1"
+	
+	fmt.Println("Enter a number 1..12")
+	fmt.Scanln(&ch)
+	url := "https://reqres.in/api/users/"+ch
+
+	fmt.Println("Fetching " + url)
+	log.Println("Fetching " + url)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Error = " , err)
+		log.Fatalf( "Error for http get")
+
+		return
+	}
+	defer resp.Body.Close() 
+	if resp.StatusCode == 404 {
+		fmt.Println("Wrong user id, ...1..12")
+		return 
+	}
+	fmt.Println("Server Returned  = " , resp)
+	body, _ := io.ReadAll(resp.Body)
+	fmt.Println("Body content   = " , string(body))
+	res := UserStruct{}
+	json.Unmarshal(body ,  &res)
+	fmt.Println("User Email Name " + res.Data.Email)
+	fmt.Println("User First Name " + res.Data.FirstName)
+}
+
+
+Lab 7  - create mod, download dependencies
+	package main
+
+	import (
+		"fmt"
+		"database/sql"
+		_ "github.com/go-sql-driver/mysql"
+	)
+
+	func main() {
+
+		db, err := sql.Open("mysql", "admin:MyPassword@tcp(mydb.cgx7wslwcmx7.us-east-1.rds.amazonaws.com:3306)/db")
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		sql:="insert into dept values(300, 'Finance','Hyd')"
+		fmt.Println("Connection open  ", db)
+		result, err := db.Exec(sql)	
+		if err != nil {
+			panic(err)
+		}
+		rows , _ := result.RowsAffected()
+		fmt.Println(rows)
+	}
+
+
+Lab 6 -  Check database connection
+	Chrome -> mysql plugin for chrome 
+		open - 	host - mydb.cgx7wslwcmx.us-east-1.rds.amazonaws.com
+			port - 3306
+			username - admin
+			password - MyPassword
+		test
+Lab 5 - Synchronization
+	declare - var mux sync.Mutex
+	initialization - mux = sync.Mutex{}
+	use 
+		mux.Lock(), mux.Unlock()
+
+Lab 4 - Waitgroup
+	package main
+
+	import (
+		"fmt"
+		"time"
+		"sync"
+	)
+	type Bank struct {
+		balance int
+	}
+
+	func deposit(bank *Bank){
+		for i:=0;i<10;i++{
+			bal := bank.balance
+			fmt.Println("in deposit - Current Balance is ", bal)
+			time.Sleep(10*time.Millisecond)
+			bal = bal+1
+			bank.balance = bal
+		}
+	}
+	func widraw(bank *Bank){
+		for i:=0;i<10;i++{
+			bal := bank.balance
+			fmt.Println("in widraw - Current Balance is ", bal)
+			time.Sleep(10*time.Millisecond)
+			bal = bal-1
+			bank.balance = bal
+		}
+	}
+	func main(){
+		var wg sync.WaitGroup
+		wg.Add(2)
+		bank := Bank{0}
+		go func(){
+			deposit(&bank)
+			wg.Done()
+		}()
+		go func() { 
+			widraw(&bank)
+			wg.Done()
+		}()
+		fmt.Println(" a line before wait ...", wg)
+
+		wg.Wait()
+		fmt.Println(" a line after wait ...")
+		fmt.Println("Current balance = ",  bank.balance)	
+
+	}
+
+Lab 3 -  comment /uncomment go keyword (panic)
+	 change buffer size 
+	 keep buffer size more than count or less than count
+	 multiple readers/writers
+	
+	package main
+
+	import (
+		"fmt"
+		"strconv"
+		"time"
+	)
+
+	func writer(str string, c chan string) {
+		for i := 1; i <= 5; i++ {
+			fmt.Println("#########in count ", i)
+			c <- str + strconv.Itoa(i)
+			time.Sleep(time.Millisecond * 100)
+		}
+	}
+	func reader(c chan string) {
+		for msg := range c {
+			fmt.Println("in reader1 ", msg)
+			time.Sleep(1 * time.Second)
+		}
+	}
+
+	func main() {
+		ch := make(chan string, 1)
+		go writer("S", ch)
+		go reader(ch)
+		time.Sleep(time.Millisecond * 5000)
+	}
+
+
+Lab2 - -> write one more function to return sub and in main method accept data from two channels and sum and sub both
+	package main
+
+	import (
+		"fmt"
+		"time"
+	)
+	func add(i, j int, ch chan int)  {
+		fmt.Println("add invoked with " ,i , "  , " , j)
+		time.Sleep(2* time.Second)
+		fmt.Println("two seconds sleep over, send data back")
+		ch <- (i+j)
+		fmt.Println("in add after ch send 1")
+	}
+
+	func main(){
+		ch := make(chan int)
+		go add(10,3000, ch)
+		fmt.Println("main - 5 seconds sleep over")
+		sum := <-ch  
+		fmt.Println("sum = "  , sum)
+		fmt.Println("main sleeping again for 5 seconds")
+		time.Sleep(5* time.Second)
+	}
+
+
+Lab1 - 
+  package main
+
+import (
+	"fmt"
+)
+func print(str string){
+	for i:=0;i<500;i++{
+		fmt.Print(str)
+	}
+}
+
+func main(){
+
+	go print(".")
+	go print("x")
+	// wait till all threads gets
+	fmt.Println("World")
+	// sleep 10 seconds
+	// accept some details from user
+	// code which takes longer time
+	for {}
+}

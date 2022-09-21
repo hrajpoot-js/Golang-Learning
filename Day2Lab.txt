@@ -1,0 +1,206 @@
+Lab 7 - Emp struct(like earlier)
+        Create a EmpManger as struct
+          array employee
+          2 funcs(receiver)
+            add(e Emp)
+            print()-> print all employees
+          //Emp struct(like earlier)
+                type Emp struct {
+                        empno int 
+                        ename string
+                        salary int
+                }
+                type EmpManager struct {
+                        //slice
+                }
+
+                func (empmgr *EmpManager) add(int position, e1 Emp){
+                        emparr[position] = e1
+                        if position> cap{
+
+                        }
+                }
+                func (empmgr *EmpManager) print(){
+                        //for loop for range of emparr
+                }
+                func main(){
+                        test ...
+                }
+
+
+Lab 6- Slice + dynamic (make, append)
+  package main
+  import (
+     "fmt"
+
+  )
+  func main() {
+    a := make([]int, 5)  
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a )
+    a[0]=11
+    a[1]=22
+    a[2]=33
+    a[3]=44
+    a[4]=55
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a)
+    //a[5]=66
+    a =	append(a,66)
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a)
+    a =	append(a,77)
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a)
+    a =	append(a,88)
+    a =	append(a,99)
+    a =	append(a,1)
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a)
+    a =	append(a,1)
+    fmt.Println("for a currently len is " , len(a) ," and capacity is " , cap(a), " and contents ", a)
+    for i, v := range a {
+      fmt.Println("i = ",  i, "Value = ", v)
+    }
+    for i:=0; i< len(a); i++{
+      fmt.Println("i = ",  i, "Value = ", a[i])
+    }
+  }
+
+
+Lab 5- Slice
+    package main
+  import (
+     "fmt"
+  )
+  func main() {
+    primes := [6]int{2, 3, 5, 7, 11, 13}
+    fmt.Println("Current data in " ,primes)
+    fmt.Println("Length of Prime = ", len(primes))
+    s1 := primes[1:3]
+    fmt.Println("S1 ", s1, "len = ", len(s1))
+    primes[2]=333
+    s1 = primes[2:4]
+    fmt.Println("S1 ", s1, "len = ", len(s1))
+    s1[4]=9
+    fmt.Println("Current data in " ,primes)
+
+  }
+Lab 4 - Array 
+        package main
+      import (
+         "fmt"
+
+      )
+      func main() {
+        var a [2]string
+        a[0] = "aaaa"
+        a[1]="bbbb"
+        fmt.Println(a)
+        fmt.Println(len(a))
+
+        primes := [6]int{2, 3, 5, 7, 11, 13}
+        fmt.Println(primes)
+        fmt.Println(len(primes))
+     }
+
+Lab 3 - Create emp struct
+              fields =   empno int, ename string, salary int
+              func - incrSalary(percent), print -> fmt.println with all details  
+              package main
+
+              import (
+                "fmt"
+              )
+              type Emp struct {
+                empno int
+                ename string
+                salary int
+              }
+              func (emp *Emp) print(){
+                fmt.Println("Print Emp - empno=", emp.empno ," , ename=", emp.ename ,", salary = ", emp.salary )
+
+              }
+              func (emp *Emp) incrSalary(percent int){
+                emp.salary = emp.salary + ( emp.salary*percent/100)
+              }
+
+              func main(){
+                emp := Emp{1,"Vaishali",1000}
+                emp.print()
+                emp.incrSalary(10)
+                emp.print()
+              }
+
+
+Lab 2 -  Struct def, initialization, Receiver function, pointer 
+        package main
+
+        import (
+                "fmt"
+        )
+        type Point2D struct {
+                x int
+                y int
+        }
+        // Pass by Value
+        /*
+        func shift(pt Point2D){
+                fmt.Println("Original Shift Line1 - " , pt)
+                pt.x = pt.x + 10
+                pt.y = pt.y + 20
+                fmt.Println("Original Shift Line4 - " , pt)
+        }
+        */
+        func (pt Point2D) shift1(){
+                fmt.Println(" Shift1 Line1 - " , pt)
+                pt.x = pt.x + 10
+                pt.y = pt.y + 20
+                fmt.Println("Shift2 Line4 - " , pt)
+        }
+        func (pt *Point2D) shift2(){
+                fmt.Println(" Shift1 Line1 - " , pt)
+                pt.x = pt.x + 10
+                pt.y = pt.y + 20
+                fmt.Println("Shift2 Line4 - " , pt)
+        }
+
+        func main(){
+                p1 := Point2D{y : 10,x : 40}
+                fmt.Println("x = ", p1.x , " y = ", p1.y)
+                p1.shift1()
+                fmt.Println("In Main " , p1)
+                p1.shift2()
+                fmt.Println("In Main " , p1)
+        }
+
+
+Lab1Extend - Modify Helper.go package to common
+        cmd>go run . 
+                watch errors 
+        messages - > GOROOT , GOPATH
+        cmd>private / public access -> Method name starting with Caps letter
+        observe folder hierarchy for goroot\src
+Lab1 - Create a folder Day2\demo1
+        Create Lab1.go
+            package main
+            import "fmt"
+            func main() {
+               fmt.Println("In Lab1.main")
+               sum := add(100,4000);
+               fmt.Println("Sum = ", sum)
+               fmt.Println("Divide = ", divide(1000,10))
+            }
+        Create Helper.go
+          package main
+          func add(x int, y int) int {
+            return x + y
+          }
+          func divide(x int, y int) int {
+            return x / y
+          }
+      
+      cmd> go run Lab1.go -> watch error
+      cmd> go run Lab1.go Helper.go -> success
+      cmd>go run . -> watch error for go.mod
+      create module
+          cmd>go mod init hello 
+              create go.mod file in current folder
+          cmd>go mod tidy
+          cmd>go run . 
+      

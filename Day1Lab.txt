@@ -1,0 +1,163 @@
+Lab 9 - Lab3(Demo2)
+	Read a file(os.Args[1] and write content to otherfile (os.Args[2])
+	Show error message if input file doesnot exist
+	Show error message if output file exist
+	use defer to close resources 	    
+		    
+Lab 8 - stacked defer
+	package main
+
+	import (
+		"fmt"
+	)
+
+	func f1() {
+		n1 := 100
+		defer fmt.Println("------------defer f1 invoked and current value of n1 is ", n1)
+		n1 = 4000
+		fmt.Println("f1 invoked and current value of n1 is ", n1)
+
+	}
+
+	func f2() {
+		fmt.Println("counting")
+		for i := 0; i < 10; i++ {
+			defer fmt.Println(i)
+		}
+		fmt.Println("done")
+	}
+	func main() {
+		defer fmt.Println("Hello ")
+		defer fmt.Println("Hello1 ")
+		fmt.Println("World  ")
+		f1()
+		f2()
+	}
+
+Lab 7 - Lab1.go 
+	package main
+
+	import (
+		"fmt"
+	)
+
+	func main(){
+		defer fmt.Println("Hello ")
+		fmt.Println("World  ")
+	}
+
+<----------------Demo2------------------>
+Lab 6 - accept a number on cmd prompt(os.Args)
+	Print fibbonaci series till that number 
+
+Lab 5 - named return
+	package main
+
+	import (
+		"fmt"
+	)
+
+	func addsub(a, b int) (n1, n2  int) {
+		fmt.Println("Addsub invoked with " , a ,"  and  "  , b)
+		n1, n2 = a+b, a-b
+		return 
+	}
+
+	func main(){
+		sum, diff := addsub(100,500)
+		fmt.Println("AddSub returned " , sum  , " and " , diff)
+	}
+Lab 4 - multi return
+	package main
+
+	import (
+		"fmt"
+	)
+
+	func addsub(a, b int) (int, int) {
+		fmt.Println("Addsub invoked with " , a ,"  and  "  , b)
+		return a+b, a-b
+	}
+
+	func main(){
+		sum, diff := addsub(100,50)
+		fmt.Println("AddSub returned " , sum  , " and " , diff)
+	}
+Lab 3  - function declaration
+	package main
+
+	import (
+		"fmt"
+	)
+	func hello(str string){
+		fmt.Println("Hello func invoked with ", str)
+	}
+	func add(a, b int) int {
+		fmt.Println("Add invoked with " , a ,"  and  "  , b)
+		return a+b
+	}
+
+	func main(){
+		var a, b int
+		a,b =10,100
+		fmt.Println("Hello ", a, "   " ,b)
+		hello("a")
+		fmt.Println("Add returned " , add(10,50) , " for 10 and 50")
+		fmt.Println("Add returned " , add(10,500) , " for 10 and 50")
+	}
+
+Lab 2 - 
+	package main
+
+	import "fmt"
+	import "os"
+
+	func main() {
+		fmt.Println("Hello World !!")
+		hname, herr := os.Hostname()
+		if herr == nil {
+			fmt.Println("Hostname ", hname)
+		} else {
+			fmt.Println("Error  ", herr)
+		}
+	}
+	Task -> check documentation 
+		go fmt Lab1.go
+		declare variable, dont use -> see error
+		use https://pkg.go.dev/time and modify Lab2 to show current time
+
+Lab 1-Linux - connect to remote linux, install and check
+       select(right hand side) -> us-east-1
+		search for ec2-> instances -> select your instance -> click on connect
+			GO
+			wget https://go.dev/dl/go1.19.1.linux-amd64.tar.gz
+			mkdir local 
+			tar -C /home/ec2-user/local -xzf ./go1.19.1.linux-amd64.tar.gz 
+			export PATH=$PATH:/home/ec2-user/local/go/bin:/ec2-user/local/tmp/aws 
+
+Lab1 - Windows - https://go.dev/doc/install -> download,run
+       Linux - 
+          remove earlier installation      
+            rm -rf /home/ec2-user/local/go && tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz
+          download tar.gz file
+            wget https://go.dev/dl/go1.19.1.linux-amd64.tar.gz
+            mkdir local 
+            extract 
+              tar -C /home/ec2-user/local -xzf ./go1.19.1.linux-amd64.tar.gz 
+            modify path to include go/bin
+              export PATH=$PATH:/home/ec2-user/local/go/bin
+        Create Lab1.go
+            // create a package
+            package main	
+
+            // dependencies
+            import "fmt"
+
+            func main(){
+              fmt.Println("Hello World !!")
+            }
+      Check (Modify code, compile/run)
+          modify package name main1
+          modify function name 
+          press enter before { of main 
+
