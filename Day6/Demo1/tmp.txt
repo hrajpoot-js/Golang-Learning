@@ -1,0 +1,5 @@
+mode: set
+/home/hrajpoot/Go-lang-Training/Day6/Demo1/Lab1.go:10.31,13.2 2 1
+/home/hrajpoot/Go-lang-Training/Day6/Demo1/Lab1.go:14.32,17.2 2 1
+/home/hrajpoot/Go-lang-Training/Day6/Demo1/Lab1.go:44.39,64.2 4 1
+/home/hrajpoot/Go-lang-Training/Day6/Demo1/Lab1.go:65.13,71.2 5 0

@@ -1,0 +1,18 @@
+//To format the code 
+
+	$go fmt program-name.go
+
+//env variable 
+	$ set go
+
+	//go mod tidy 
+it downloads the non standard dependencies into local folder.
+
+// package and module diff 
+module is one unit where multiple package can be clubbed as a single unit.
+
+
+//Tips : 
+-------
+Tip-1: By default all functions are private in GO if you want them to be public function name should start with Capital letter char.
+
