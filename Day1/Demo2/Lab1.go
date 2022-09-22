@@ -1,4 +1,5 @@
 //read and write into the file
+//User input 
 
 package main
 
