@@ -1,3 +1,9 @@
+/*
+	struct in Go Lang
+	struct passing as function argument
+
+*/
+
 package main 
 
 import ("fmt")
